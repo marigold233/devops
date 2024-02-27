@@ -1,0 +1,12 @@
+[LOCAL]
+restic_cmd = "restic.exe"
+logs_dir="logs"
+script_running_time="21:00"
+repos = [
+    { tag="work", backup_files="D:\\个人资料\\电脑字体", repo_dir = "C:\\Users\\qing\\Downloads\\restic_0.13.1_windows_amd64\\restic-repo", repo_password="888" },
+    { tag="work", backup_files="D:\\个人资料\\电脑字体1", repo_dir = "C:\\Users\\qing\\Downloads\\restic_0.13.1_windows_amd64\\restic-repo1", repo_password="999" }
+
+]
+
+[ALIYUNPAN]
+cloud_backup_folder = "backup_repo"
