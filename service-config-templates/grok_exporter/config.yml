@@ -1,0 +1,43 @@
+global:
+  config_version: 3
+input:
+  type: file
+  path: /server_status.txt
+  #path: ./example/test.log
+  readall: true # Read from the beginning of the file? False means we start at the end of the file and read only new lines.
+imports:
+- type: grok_patterns
+  dir: ./patterns
+#grok_patterns:
+#- 'EXIM_MESSAGE [a-zA-Z ]*'
+#metrics:
+#- type: gauge
+#  name: server_status
+#  help: module server status.
+    #match: '%{EXIM_DATE} %{EXIM_REMOTE_HOST} F=<%{EMAILADDRESS}> rejected RCPT <%{EMAILADDRESS}>: %{EXIM_MESSAGE:message}'
+#  match: '%{IP} %{INT}%{SPACE}识别 %{NUMBER} 可用 %{NUMBER} 工作中 %{NUMBER} 空闲 %{NUMBER}'
+metrics:
+    - type: gauge
+      name: moduleserver_all_total
+      help: moduleservers current module number.
+      cumulative: false
+      match: 'module总数: %{NUMBER:val}'
+      value: '{{.val}}'
+      labels:
+        logfile: '{{base .logfile}}'
+        type: 'all'
+    - type: gauge
+      name: moduleserver_total
+      help: moduleserver module total.
+      cumulative: false
+      match: '%{IP:ip}.*?识别 %{NUMBER:val}'
+      value: '{{.val}}'
+      labels:
+        logfile: '{{base .logfile}}'
+        ip: '{{.ip}}'
+        type: 'module_total'
+server:
+  protocol: http
+  port: 9144
+  #cert: /data/grok_exporter-1.0.0.RC5.linux-amd64/example/server.crt
+  #key: /data/grok_exporter-1.0.0.RC5.linux-amd64/example/server.key

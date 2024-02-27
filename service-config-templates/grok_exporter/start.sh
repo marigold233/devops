@@ -1,0 +1,1 @@
+nohup ./grok_exporter -config config.yml &

@@ -1,0 +1,130 @@
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# remote_write:
+#   - url: "http://localhost:9090/write"
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+    static_configs:
+      - targets: ["localhost:9090"]
+  - job_name: "telegraf"
+    static_configs:
+      - targets:
+        - "localhost:9273"
+        - "192.168.12.63:9273"
+        - "192.168.12.64:9273"
+        - "192.168.12.91:9273"
+        - "192.168.12.92:9273"
+        - "192.168.12.93:9273"
+        - "192.168.12.94:9273"
+        - "192.168.12.95:9273"
+        - "192.168.12.96:9273"
+        - "192.168.12.12:9273"
+        - "192.168.12.13:9273"
+        - "192.168.12.61:9273"
+        - "192.168.12.62:9273"
+ 
+  - job_name: 'tcp_port_probe' # 配置get请求检测
+    #scrape_interval: 30s
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]
+    static_configs:
+      - targets:         # 测试如下的请求是否可以访问的通
+        - "192.168.12.63:6200"
+        - "192.168.12.64:6200"
+        - "192.168.12.91:6200"
+        - "192.168.12.92:6200"
+        - "192.168.12.93:6200"
+        - "192.168.12.94:6200"
+        - "192.168.12.95:6200"
+        - "192.168.12.96:6200"
+        # - "192.168.12.96:14444" # 用来测试端口不通的情况
+        labels:
+          group: "admin_server"
+      - targets:
+        - "192.168.12.61:6100"
+        - "192.168.12.13:6000"
+        - "192.168.12.62:6100"
+        - "192.168.12.12:6100"
+        labels:
+          group: "nginx"
+      - targets:
+        - "192.168.12.18:6000"
+        - "192.168.12.19:6000"
+        - "192.168.12.20:6000"
+        - "192.168.12.21:6000"
+        - "192.168.12.27:6000"
+        - "192.168.12.28:6000"
+        - "192.168.12.29:6000"
+        - "192.168.12.30:6000"
+        - "192.168.12.49:6000"
+        - "192.168.12.50:6000"
+        - "192.168.12.51:6000"
+        - "192.168.12.52:6000"
+        - "192.168.12.57:6000"
+        - "192.168.12.58:6000"
+        - "192.168.12.59:6000"
+        - "192.168.12.60:6000"
+        - "192.168.12.65:6000"
+        - "192.168.12.66:6000"
+        - "192.168.12.67:6000"
+        - "192.168.12.68:6000"
+        - "192.168.12.69:6000"
+        - "192.168.12.70:6000"
+        - "192.168.12.71:6000"
+        - "192.168.12.72:6000"
+        - "192.168.12.73:6000"
+        - "192.168.12.74:6000"
+        - "192.168.12.75:6000"
+        - "192.168.12.76:6000"
+        - "192.168.12.77:6000"
+        - "192.168.12.78:6000"
+        - "192.168.12.79:6000"
+        - "192.168.12.80:6000"
+        - "192.168.12.81:6000"
+        - "192.168.12.82:6000"
+        - "192.168.12.83:6000"
+        - "192.168.12.84:6000"
+        - "192.168.12.85:6000"
+        - "192.168.12.86:6000"
+        - "192.168.12.87:6000"
+        - "192.168.12.88:6000"
+        labels:
+          group: "samserver"
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 127.0.0.1:9115 # blackbox-exporter 服务所在的机器和端口
+  - job_name: "samserver_status"
+    static_configs:
+      - targets:
+        - "localhost:9144"
+
+##  - job_name: "nginx"
+#    metrics_path: /status/format/prometheus
+#    static_configs:
+#      - targets: ["192.168.56.102:80"]
+    
