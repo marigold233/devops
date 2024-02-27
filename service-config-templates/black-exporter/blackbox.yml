@@ -1,0 +1,13 @@
+modules:
+  http_2xx: # 这个名字是随便写的，但是需要在 prometheus.yml 配置文件中对应起来。
+    prober: http # 进行探测的协议，可以是 http、tcp、dns、icmp
+    timeout: 10s
+  http_post_2xx:
+    prober: http
+    http:
+      method: POST
+  tcp_connect: # tcp检测，比如检测某个端口是否在线
+    prober: tcp
+    timeout: 5s
+  icmp: # icmp 检测，比如ping某个服务器
+    prober: icmp
