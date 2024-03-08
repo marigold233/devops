@@ -1,0 +1,32 @@
+# fluentd/conf/fluent.conf
+
+
+<source>
+  @type tail
+  path /test.log
+  pos_file /testlogs-tmp/test.log.pos
+  tag test.logs
+  read_from_head true
+  refresh_interval 1
+  <parse>
+    @type none
+  </parse>
+</source>
+
+<match *.logs>
+  @type elasticsearch
+  host 127.0.0.1
+  port 9200
+  user logstash_internal
+  password 123456
+  default_elasticsearch_version 8
+  index_name fluentd-${tag}
+  logstash_format true
+    <store>
+    @type stdout
+  </store>
+</match>
+
+<match *.logs>
+  @type stdout
+</match>

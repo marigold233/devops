@@ -1,0 +1,5 @@
+# 必须这个版本的sanic
+sanic==21.6.2
+cachetools
+gevent==23.7.0
+toml==0.10.2

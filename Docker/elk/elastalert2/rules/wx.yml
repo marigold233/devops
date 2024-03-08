@@ -1,0 +1,39 @@
+name: "wx-alter"
+type: "frequency"
+index: "logstash-access-*"
+is_enabled: true
+num_events: 1
+realert:
+  minutes: 1
+terms_size: 50
+timeframe:
+  minutes: 1
+timestamp_field: "@timestamp"
+timestamp_type: "iso"
+use_strftime_index: false
+alert_text_type: alert_text_only 
+alert_text: | 
+  > curl browser UA
+  > 时间: {0}
+  > 主机名: {1}
+  > 触发次数: {2}
+  > 匹配次数: {3}
+  > 日志信息: {4}
+
+alert_text_args:
+  - "timestamp"
+  - "host.name"
+  - "num_hits"
+  - "num_matches"
+    # - "message"
+  - "event.original"
+
+filter:
+  - query:
+      query_string:
+        query: "bagent: curl"
+
+alert:
+    - "workwechat"
+      #work_wechat_bot_id: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=e8ec08fe-a113-4b36-9d57-295317f11742"
+work_wechat_bot_id: "e8ec08fe-a113-4b36-9d57-295317f11742"
