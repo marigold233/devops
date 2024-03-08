@@ -1,10 +1,9 @@
-FROM centos:6.6
+ARG OS_VERSION="6.6"
+FROM centos:${OS_VERSION}}
 WORKDIR /
-ADD ./CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
-ADD https://ghproxy.com/https://github.com/benibela/xidel/releases/download/Xidel_0.9.8/xidel-0.9.8.linux64.tar.gz .
+COPY CentOS-Base.repo /etc/yum.repos.d/
 RUN yum install -y gcc gcc-c++ make tar perl wget \
-    && yum clean all
-COPY nginx-builder.sh ./nginx-builder.sh
-RUN tar xfv xidel-0.9.8.linux64.tar.gz \
-        && chmod u+x /nginx-builder.sh xidel
+        && yum clean all
+COPY . .
+RUN chmod u+x /nginx-builder.sh xidel
 ENTRYPOINT [ "/nginx-builder.sh" ]

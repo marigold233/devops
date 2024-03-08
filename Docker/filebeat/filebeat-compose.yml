@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  filebeat:
+    image: docker-elk-filebeat:latest
+    # Run as 'root' instead of 'filebeat' (uid 1000) to allow reading
+    # 'docker.sock' and the host's filesystem.
+    user: root
+    command:
+      # Log to stderr.
+      - -e
+      # Disable config file permissions checks. Allows mounting
+      # 'config/filebeat.yml' even if it's not owned by root.
+      # see: https://www.elastic.co/guide/en/beats/libbeat/current/config-file-permissions.html
+      - --strict.perms=false
+    volumes:
+      - ./config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro,Z
+      - /opt/nginx:/logs/opt/nginx:ro,z
+      - /var:/logs/var:ro,z
+      - type: bind
+        source: /var/lib/docker/containers
+        target: /var/lib/docker/containers
+        read_only: true
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
+        read_only: true
+    environment:
+      FILEBEAT_INTERNAL_PASSWORD: '123456'
+      BEATS_SYSTEM_PASSWORD: '123456'
+    restart: unless-stopped
+    network_mode: "host"
+    #ports:
+      # syslog
+    #  - "9000:9000/udp"

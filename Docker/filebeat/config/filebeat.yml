@@ -1,0 +1,115 @@
+## Filebeat configuration
+## https://github.com/elastic/beats/blob/main/deploy/docker/filebeat.docker.yml
+#
+
+#name: filebeat
+name: 192.168.56.11
+
+
+# doc:https://discuss.elastic.co/t/filebeat-changing-filebeats-path-for-its-configuration-module/236243/3
+filebeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+
+processorst.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+#filebeat.autodiscover:
+#  providers:
+#    # The Docker autodiscover provider automatically retrieves logs from Docker
+#    # containers as they start and stop.
+#    - type: docker
+#      hints.enabled: true
+
+processors:
+  - add_cloud_metadata: ~
+
+#setup:
+#  kibana.host: "192.168.56.10:5601"
+#  kibana.username: "elastic"
+#  kibana.password: "123456"
+#  dashboards.enable: true
+
+setup.template.settings:
+  index.number_of_shards: 1
+
+filebeat.inputs:
+  - type: filestream
+    enabled: true
+    id: nginx-access
+    paths:
+      - /logs/var/log/nginx/access.log
+    # tags: ["web", "wooide"]
+    fields:
+      app: nginx
+      type: access
+    fields_under_root: true
+
+  - type: filestream
+    enabled: true
+    id: nginx-error
+    paths:
+      - /logs/var/log/nginx/error.log
+    # tags: ["web", "wooide"]
+    fields:
+      app: nginx
+      type: error
+    fields_under_root: true
+
+  - type: filestream
+    enabled: true
+    id: logger
+    paths:
+      - /logs/var/testLog*.log
+    fields:
+      app: logger
+      type: shell
+    fields_under_root: true
+
+  - type: syslog
+    #format: auto
+    timeout: 10
+    format: rfc5424
+    max_message_size: 10KiB
+    keep_null: true
+    protocol.udp:
+      host: "0.0.0.0:9000"
+    fields:
+      type: syslog
+    fields_under_root: true
+
+#  - type: container
+#    paths:
+#      # all logs
+#      # - /var/lib/docker/containers/*/*.log
+#      - /var/lib/docker/containers/15c4fe522cf188cc659eca1c26d5dbb3285a13f811a66c5b305836f8ad8e283c/*.log
+#    fields:
+#      app: netdata
+#      type: docker
+#    fields_under_root: true
+
+#filebeat.modules:   
+#  - module: nginx
+#    access:
+#      enabled: true
+#      var.paths: ["/logs/var/log/nginx/access.log*"]
+#    error:
+#      enabled: true
+#      var.paths: ["/logs/var/log/nginx/error.log*"]
+
+output.logstash:
+  hosts: ["192.168.56.10:5044"]
+    # ttl: 120
+#output.kafka:
+#  hosts: ["127.0.0.1:9092"]
+#  #topic: '%{[fields.app]}'
+#  topic: 'logs'
+#  partition.round_robin:
+#    reachable_only: false
+#  required_acks: -1
+#  compression: gzip
+
+#http:
+#  enabled: true
+#  host: 0.0.0.0

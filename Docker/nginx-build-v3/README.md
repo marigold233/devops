@@ -1,0 +1,1 @@
+https://zhangguanzhang.github.io/2022/01/26/nginx-static-build/#/%E6%89%8B%E5%8A%A8%E6%AD%A5%E9%AA%A4

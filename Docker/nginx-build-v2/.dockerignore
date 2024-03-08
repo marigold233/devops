@@ -1,0 +1,5 @@
+*.md
+local-build
+*.tgz
+*.tar.gz
+*.repo
