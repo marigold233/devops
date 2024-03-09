@@ -35,5 +35,4 @@ filter:
 
 alert:
     - "workwechat"
-      #work_wechat_bot_id: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=e8ec08fe-a113-4b36-9d57-295317f11742"
-work_wechat_bot_id: "e8ec08fe-a113-4b36-9d57-295317f11742"
+work_wechat_bot_id: ""
