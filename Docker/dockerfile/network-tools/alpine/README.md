@@ -1,3 +1,15 @@
+telnet：busybox-extras
+net-tools: net-tools
+tcpdump: tcpdump
+wget: wget
+dig nslookup: bind-tools
+curl: curl
+nmap: nmap
+wget ifconfig nc traceroute.. : busybox
+ssh: openssh-client
+ss iptables: iproute2
+ethtool: ethtool
+
 使用：
 ```bash
 docker build -t network-tools:latest .
