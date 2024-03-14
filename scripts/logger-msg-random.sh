@@ -82,12 +82,20 @@ function logger() {
 
 # 用法：
 # 不输出到日志文件里
-logger_init
-logger debug "hello world-1"
-logger warn "hello world-2"
+# logger_init
+# logger debug "hello world-1"
+# logger warn "hello world-2"
 
 # 输出到日志文件里
-logger_init --output true --dir /tmp --prefix test
-logger err "hello world"
+# logger_init --output true --dir /tmp --prefix test
+# logger err "hello world"
 # 只输出到控制台，不输出到日志文件里
-logger info "hello worlaaaad" false
+# logger info "hello worlaaaad" false
+
+logger_init --output true --dir /tmp --prefix test
+info_messages=("Connected to database" "Task completed successfully" "Operation finished" "Initialized application")
+while true; do
+	random_message=${info_messages[$RANDOM % ${#info_messages[@]}]}
+	logger info "$random_message"
+	sleep 3
+done
